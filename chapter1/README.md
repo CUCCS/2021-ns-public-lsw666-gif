@@ -17,12 +17,17 @@
 
 1. 虚拟硬盘配置成多重加载
 2. 已经搭建满足拓扑图所示的虚拟机网络拓扑
-3. 可以完成网络连通性测试
-[ * ] 靶机可以直接访问攻击者主机
-[ * ] 攻击者主机无法直接访问靶机
-[ * ] 网关可以直接访问攻击者主机和靶机
-[ * ] 靶机的所有对外上下行流量必须经过网关
-[ * ] 所有节点均可以访问互联网
+3. 可以完成网络连通性测试有：
+
+* [x] 靶机可以直接访问攻击者主机
+
+* [x] 攻击者主机无法直接访问靶机
+
+* [x] 网关可以直接访问攻击者主机和靶机
+
+* [x] 靶机的所有对外上下行流量必须经过网关
+  
+* [x] 所有节点均可以访问互联网
 
 ## 实验过程
 
@@ -41,21 +46,24 @@
 ### 配置网络拓扑阶段
 
 1. 查看网关的各网络地址： ![gateway](img/netofgateway.png)
-   发现居然全部已经配置好了，从图中可以看到intnet1为172.16.111.1/24，intnet2为172.16.222.1/24。
+
+   * 发现居然全部已经配置好了，从图中可以看到intnet1为`172.16.111.1/24`，intnet2为`172.16.222.1/24`。
 
 2. 配置dnsmasq(dnsmasq以及被提前改好)
-   * 通过```apt install dnsmasq```来安装dnsmasq
+   * 通过```apt install dnsmasq```的语句来安装dnsmasq
    * 添加配置文件：
-      ```# /etc/dnsmasq.d/gw-enp09.conf```
-      ```interface=enp0s9```
-      ```dhcp-range=172.16.111.100,172.16.111.150,240h```
 
-      ```# /etc/dnsmasq.d/gw-enp010.conf```
-      ```interface=enp0s10```
-      ```dhcp-range=172.16.222.100,172.16.222.150,240h```
+      ```# /etc/dnsmasq.d/gw-enp09.conf
+      interface=enp0s9
+      dhcp-range=172.16.111.100,172.16.111.150,240h
+
+      # /etc/dnsmasq.d/gw-enp010.conf
+      interface=enp0s10
+      dhcp-range=172.16.222.100,172.16.222.150,240h
+      ```
 
 3. 再查看两个xp虚拟机的情况：  ![xp1](img/netofxp1.png) ![xp2](img/netofxp2.png)
-   全部都在对应的内部网络之内
+   * 全部都在对应的内部网络之内
 
 4. 再查看另一个debian victim和kali victim的内部网络地址： ![netofdebianvictim](img/netofdebianvictim.png)  ![netofkalivictim](img/netofkalivictim.png) 。全部都在对应的内部网络之内
 
@@ -66,8 +74,9 @@
 
 ### 验证实验结果
 
-1. 靶机可以直接访问攻击者主机
-   直接在命令行使用ping语句来进行验证：
+1. 靶机可以直接访问攻击者主机  
+
+   * 直接在命令行使用`ping`语句来进行验证：
    ![visitattack1](img/visitattack1.png)
    ![visitattack2](img/visitattck2.png)
    ![visitattack3](img/visitattacker3.png)
@@ -80,11 +89,14 @@
     ![gatewayping](img/gatewayping.png)
 
 4. 靶机的所有对外上下行流量必须经过网关(操作有点复杂,所以只用wireshark展示一个)
-   在gateway使用语句```sudo apt install tcpdump``` 以及 ```sudo tcpdump -i ens0s9 -n -w 20210907.1.pcap```表明检测intnet1的流量得到20210907.1.pcap
+   1. 在gateway使用语句```sudo apt install tcpdump``` 以及 ```sudo tcpdump -i ens0s9 -n -w 20210907.1.pcap```可以表明：
+
+   2. 检测intnet1的流量得到20210907.1.pcap
    ![wireshark](img/wireshark.png)
 
 5. 所有节点均可以访问互联网
-   使用语句```ping www.zhihu.com```来访问互联网
+   * 使用语句```ping www.zhihu.com```来访问互联网
+
    ![visitinternet1](img/visitinternet1.png)
    ![visitinternet2](img/visitinternet2.png)
    ![visitinternet3](img/visitinternet3.png)
